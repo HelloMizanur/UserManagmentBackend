@@ -4,9 +4,10 @@ const session = require('./session');
 const signupRoutes = require('./signup');
 const signinRoutes = require('./signin');
 const homeRoutes = require('./home');
+require('dotenv').config();
 
 const app = express();
-const port = 8080;
+const port = process.env.PORT || 8080;
 
 app.use(cors());
 app.use(express.json());
@@ -15,6 +16,11 @@ app.use(session);
 app.use(signupRoutes);
 app.use(signinRoutes);
 app.use(homeRoutes);
+
+app.use((err, req, res, next) => {
+    console.error(err.stack);
+    res.status(500).send('Something broke!');
+});
 
 app.listen(port, () => {
     console.log(`App listening on port ${port}`);
