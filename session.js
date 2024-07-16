@@ -1,7 +1,9 @@
 const session = require('express-session');
 const MySQLStore = require('connect-mysql-session')(session);
 const mysql = require('mysql2');
+const db = require('./db'); // Adjust this to your database connection setup
 
+// Your database connection options
 const dbOptions = {
     host: process.env.DB_HOST || 'localhost',
     user: process.env.DB_USER || 'root',
@@ -9,8 +11,10 @@ const dbOptions = {
     database: process.env.DB_NAME || 'signup'
 };
 
+// Create a MySQL connection
 const connection = mysql.createConnection(dbOptions);
 
+// Create a session store using connect-mysql-session
 const sessionStore = new MySQLStore({
     expiration: 10800000,
     createDatabaseTable: true,
@@ -24,6 +28,7 @@ const sessionStore = new MySQLStore({
     }
 }, connection);
 
+// Create session middleware
 const sessionMiddleware = session({
     key: 'user_sid',
     secret: 'your_secret_key',
